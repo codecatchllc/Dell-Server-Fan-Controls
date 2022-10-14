@@ -7,32 +7,39 @@ host="someipaddress"
 user="someusername"
 password="somepassword"
 
-#define temperature bounds
-minCpu="45"
+#define upper and lower limits
+idle="45"
+minCpu="48"
 medCpu="55"
 maxCpu="60"
+
+if [ $tempCpu -le $idle ] ; then
+
+	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x00 >> /dev/null
+	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x04 >> /dev/null
+    # Set to 1680 RPM (0x04)
 
 if [ $tempCpu -le $minCpu ] ; then
 
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x00 >> /dev/null
-	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x3 >> /dev/null
-    # Set to 2040 RPM (0x3)
+	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x0C >> /dev/null
+	# Set to 2520 RPM (0x0C)
 
 elif [ $tempCpu -le $medCpu ] ; then
 
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x00 >> /dev/null
-	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x17 >> /dev/null
-	# Set to 3600 RPM (0x17)
+	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x14 >> /dev/null
+	# Set to 3480 RPM (0x14)
 
 elif [ $tempCpu -le $maxCpu ] ; then
 
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x00 >> /dev/null
-	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x20 >> /dev/null
-	# Set to 5000 RPM (0x20)
+	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x18 >> /dev/null
+	# Set to 3840 RPM (0x)
 
 else
 
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x01 >> /dev/null
     # Set to automatic control
-    
+
 fi
