@@ -19,7 +19,7 @@ if [ $tempCpu -le $idle ] ; then
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x04 >> /dev/null
     # Set to 1680 RPM (0x04)
 
-if [ $tempCpu -le $minCpu ] ; then
+elif [ $tempCpu -le $minCpu ] ; then
 
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x01 0x00 >> /dev/null
 	ipmitool -I lanplus -H $host -U $user -P $password raw 0x30 0x30 0x02 0xff 0x0C >> /dev/null
